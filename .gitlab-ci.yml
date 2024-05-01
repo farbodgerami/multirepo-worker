@@ -33,6 +33,6 @@ deploy-to-pre-product:
   stage: deploy
   # needs: ["result-service-image-scan"]z
   trigger:
-    project: ista/multirepo-worker
+    project: ista/multirepo-devops
     branch: main
 
