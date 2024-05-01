@@ -17,17 +17,17 @@ worker-build-job:
   image: docker:dind
   script:
     # - cd worker
-    - docker build -t ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA .
-    - docker push ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA
+    - docker build -t ${IMAGE_PATH}/multirepo-worker:$CI_COMMIT_SHORT_SHA .
+    - docker push ${IMAGE_PATH}/multirepo-worker:$CI_COMMIT_SHORT_SHA
 
 worker-test-image:
   stage: test
   needs: ["worker-build-job"]
   script:
-    - docker pull ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA
+    - docker pull ${IMAGE_PATH}/multirepo-worker:$CI_COMMIT_SHORT_SHA
     - echo "worker image test"
-    - docker tag ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA ${IMAGE_PATH}/multitrepo-worker:${VERSION}
-    - docker push ${IMAGE_PATH}/multitrepo-worker:${VERSION}
+    - docker tag ${IMAGE_PATH}/multirepo-worker:$CI_COMMIT_SHORT_SHA ${IMAGE_PATH}/multirepo-worker:${VERSION}
+    - docker push ${IMAGE_PATH}/multirepo-worker:${VERSION}
 
 deploy-to-pre-product:
   stage: deploy
