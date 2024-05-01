@@ -1,0 +1,38 @@
+stages:
+  - build
+  - test
+  - deploy
+
+default:
+  image: docker:dind
+  before_script:
+    - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASS} ${REGISTRY_URL}
+
+variables:
+  IMAGE_PATH: ${REGISTRY_URL}
+  VERSION: v1.0.1
+
+worker-build-job:
+  stage: build
+  image: docker:dind
+  script:
+    - cd worker
+    - docker build -t ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA .
+    - docker push ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA
+
+worker-test-image:
+  stage: test
+  needs: ["worker-build-job"]
+  script:
+    - docker pull ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA
+    - echo "worker image test"
+    - docker tag ${IMAGE_PATH}/multitrepo-worker:$CI_COMMIT_SHORT_SHA ${IMAGE_PATH}/multitrepo-worker:${VERSION}
+    - docker push ${IMAGE_PATH}/multitrepo-worker:${VERSION}
+
+deploy-to-pre-product:
+  stage: deploy
+  # needs: ["result-service-image-scan"]
+  trigger:
+    project: ista/multirepo-worker
+    branch: main
+
