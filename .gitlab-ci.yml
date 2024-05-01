@@ -31,7 +31,7 @@ worker-test-image:
 
 deploy-to-pre-product:
   stage: deploy
-  # needs: ["result-service-image-scan"]
+  # needs: ["result-service-image-scan"]z
   trigger:
     project: ista/multirepo-worker
     branch: main
